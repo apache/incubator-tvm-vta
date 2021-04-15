@@ -29,7 +29,7 @@ ci_i386 = "tvmai/ci-i386:v0.52"
 // NOTE: docker container provides an extra layer of isolation
 docker_run = "tests/scripts/docker_bash.sh"
 // timeout in minutes
-max_time = 60
+max_time = 240
 
 // initialize source codes
 def init_git() {
