@@ -60,6 +60,7 @@ class PkgConfig(object):
         "LOG_INP_BUFF_SIZE",
         "LOG_WGT_BUFF_SIZE",
         "LOG_ACC_BUFF_SIZE",
+        "ACC_DEP_DISTANCE",
     ]
 
     def __init__(self, cfg):
@@ -72,6 +73,10 @@ class PkgConfig(object):
             cfg["LOG_ACC_BUFF_SIZE"] +
             cfg["LOG_OUT_WIDTH"] -
             cfg["LOG_ACC_WIDTH"])
+
+        # export VTA_ACC_DEP_DISTANCE env so that VTA runtime can use it to VerifyDep
+        if "ACC_DEP_DISTANCE" in cfg:
+            os.environ['VTA_ACC_DEP_DISTANCE'] = str(cfg['ACC_DEP_DISTANCE'])
 
         # Update cfg now that we've extended it
         self.__dict__.update(cfg)

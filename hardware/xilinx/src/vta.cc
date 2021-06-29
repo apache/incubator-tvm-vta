@@ -447,7 +447,11 @@ PRAGMA_HLS(HLS INTERFACE s_axilite port = done bundle = CONTROL_BUS offset = VTA
   static bus_T acc_mem[VTA_ACC_BUFF_DEPTH][ACC_MAT_AXI_RATIO];
 #pragma HLS ARRAY_RESHAPE variable = acc_mem complete dim=2
 // This is necessary to obtain II=1
+#ifdef VTA_ACC_DEP_DISTANCE
+#pragma HLS DEPENDENCE variable = acc_mem inter distance=VTA_ACC_DEP_DISTANCE true
+#else
 #pragma HLS DEPENDENCE variable = acc_mem inter false
+#endif
 
   // Pop GEMM instruction
   insn_T raw_insn = gemm_queue.read();
