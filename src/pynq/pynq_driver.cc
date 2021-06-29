@@ -127,17 +127,24 @@ class VTADevice {
     VTAWriteMappedReg(vta_compute_handle_, 0x0, VTA_AUTORESTART);
     VTAWriteMappedReg(vta_store_handle_, 0x0, VTA_AUTORESTART);
 
-    // Allow device to respond
-    struct timespec ts = { .tv_sec = 0, .tv_nsec = 1000 };
-    nanosleep(&ts, &ts);
+    unsigned t, flag = 0;
+    for (t = 0; t < wait_cycles; ++t) {
+      flag = VTAReadMappedReg(vta_fetch_handle_, 0x0) >> 1 & 0x1;
+      if (flag == VTA_DONE) break;
+      std::this_thread::yield();
+    }
 
     // Loop until the VTA is done
-    unsigned t, flag = 0;
     for (t = 0; t < wait_cycles; ++t) {
       flag = VTAReadMappedReg(vta_compute_handle_, VTA_COMPUTE_DONE_RD_OFFSET);
       if (flag == VTA_DONE) break;
       std::this_thread::yield();
     }
+
+    VTAWriteMappedReg(vta_load_handle_, 0x0, VTA_AUTORESTART_DISABLE);
+    VTAWriteMappedReg(vta_compute_handle_, 0x0, VTA_AUTORESTART_DISABLE);
+    VTAWriteMappedReg(vta_store_handle_, 0x0, VTA_AUTORESTART_DISABLE);
+
     // Report error if timeout
     return t < wait_cycles ? 0 : 1;
   }

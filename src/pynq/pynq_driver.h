@@ -57,6 +57,8 @@ uint32_t VTAReadMappedReg(void* base_addr, uint32_t offset);
 #define VTA_START 0x1
 /*! \brief VTA configuration register auto-restart value */
 #define VTA_AUTORESTART 0x81
+/*! \brief VTA configuration register auto-restart disable value */
+#define VTA_AUTORESTART_DISABLE 0x0
 /*! \brief VTA configuration register done value */
 #define VTA_DONE 0x1
 
